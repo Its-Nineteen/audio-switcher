@@ -1,0 +1,44 @@
+# Personal configuration and backups
+audio-config.json
+audio-config.json.*
+*.bak
+*.backup
+
+# Local binaries, shortcuts, diagnostics, and build output
+*.exe
+*.dll
+*.pdb
+*.lnk
+*.log
+*.tmp
+*.temp
+*.zip
+bin/
+obj/
+build/
+dist/
+TestResults/
+
+# Handoff/context files and local editor state
+CODEX_PROMPT.md
+AGENTS.md
+*Handoff*/
+.codex/
+.agents/
+.idea/
+.vscode/
+*.code-workspace
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Local credentials and environment files
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.pfx
+*.p12
+credentials.json
+secrets.json

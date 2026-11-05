@@ -1,0 +1,27 @@
+name: Windows checks
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Syntax, configuration and profile selection
+        shell: powershell
+        run: ./tests/Test-Logic.ps1
+      - name: Playback validation and recovery with simulated devices
+        shell: powershell
+        run: ./tests/Test-CoreAudio.ps1
+      - name: Windows launcher and embedded icon
+        shell: powershell
+        run: ./tests/Test-Build.ps1
+      - name: Desktop shortcut migration in a temporary folder
+        shell: powershell
+        run: ./tests/Test-Shortcut.ps1
