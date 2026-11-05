@@ -2,11 +2,11 @@
 
 <img src="assets/icons/icon_round.png" alt="Audio Switcher icon" width="96">
 
-Audio Switcher is a small Windows utility for switching audio outputs in one click. I built it as a quality-of-life improvement: a quick way to switch between my Astro A50 X Gen 5 headset and my PC speakers.
+Audio Switcher is a small Windows utility for switching audio outputs in one click. I built it as a quality-of-life improvement: a quick way to switch between my headset and my PC speakers.
 
 Choose two playback profiles, each with its own general and communications outputs, or leave communications unchanged. Microphones are never changed.
 
-Audio Switcher runs once and exits. There is no background app, startup entry, service, telemetry, or runtime download. This is an unofficial project, unaffiliated with Logitech or Astro.
+Audio Switcher runs once and exits. There is no background app, startup entry, service, telemetry, or runtime download.
 
 ## Get started
 
@@ -16,7 +16,7 @@ You need **Windows 10/11, Windows PowerShell 5.1, .NET Framework**, two active p
 2. Connect both outputs and open **Setup.cmd**. Choose general outputs A and B, then communications for each. Enter `0` for **Keep unchanged**, Enter to accept a suggestion, or `q` to cancel. For A50 X, put the base in PC mode.
 3. Setup builds `AudioSwitcher.exe`, saves `audio-config.json`, and creates the **Audio Switcher** desktop shortcut without changing your current output. Click the shortcut or executable to switch.
 
-Suggested profiles for an Astro A50 X setup:
+Suggested profiles for an Astro A50 X setup (my current headset):
 
 | Profile | General playback | Communications playback |
 | --- | --- | --- |
@@ -109,3 +109,5 @@ Core Audio enumerates playback endpoints and reads defaults. Setting them uses t
 ## Uninstall
 
 Remove your shortcut, pins, and installation folder. Keep `audio-config.json` if you want to reuse your profiles. The last audio defaults remain selected and can be changed normally in Windows.
+
+*This is an unofficial project, unaffiliated with Logitech or Astro.*
