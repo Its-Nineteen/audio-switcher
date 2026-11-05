@@ -12,7 +12,7 @@ Audio Switcher runs once and exits. There is no background app, startup entry, s
 
 You need **Windows 10/11, Windows PowerShell 5.1, .NET Framework**, two active playback outputs, and a permanent folder you can write to. No administrator rights, Visual Studio, or extra modules are required.
 
-1. Download and extract the repository ZIP, or clone it. Keep `assets/icons/` intact; paths with spaces are supported.
+1. Download and extract the repository ZIP, or clone it, into a permanent folder. Paths with spaces are supported. See **Installation files** below if you want to keep only the app files.
 2. Connect both outputs and open **Setup.cmd**. Choose general outputs A and B, then communications for each. Enter `0` for **Keep unchanged**, Enter to accept a suggestion, or `q` to cancel. For A50 X, put the base in PC mode.
 3. Setup builds `AudioSwitcher.exe`, saves `audio-config.json`, and creates the **Audio Switcher** desktop shortcut without changing your current output. Click the shortcut or executable to switch.
 
@@ -24,6 +24,20 @@ Suggested profiles for an Astro A50 X setup (my current headset):
 | B: speakers | Your speakers | The same speakers |
 
 Choose any two active playback outputs. Device names keep their Windows language; setup recognizes both `Speakers` and `Altavoces`. Selection uses saved endpoint IDs, not names or list positions.
+
+### Installation files
+
+Keep these files together, preserving the `assets/icons/` path for setup:
+
+| Files | Purpose |
+| --- | --- |
+| `AudioSwitcher.exe`, `AudioSwitcher.ps1`, `CoreAudio.cs`, `audio-config.json` | **Required for daily use.** Setup creates the EXE and JSON; they are not included in the download. |
+| `Setup.cmd`, `Launcher.cs`, `assets/icons/icon_round.ico` | Also needed to configure or rebuild. You can remove them after setup, but must restore them before configuring or building again. |
+| `ListDevices.cmd`, `TestSwitch.cmd` | Optional diagnostic helpers. |
+
+The remaining downloaded files are not needed to run the app: you can delete `tests/`, `.github/`, `.gitignore`, `.gitattributes`, `README.md`, `assets/icons/icon_round.png`, and unused alternative ICOs from your installation copy. **Keep any ICO used by a customized shortcut in its current location.** The default shortcut uses the icon embedded in the EXE.
+
+If you cloned the repository, keep `.git/` for Git updates, or copy the app files into a separate installation folder.
 
 ## How it behaves
 
