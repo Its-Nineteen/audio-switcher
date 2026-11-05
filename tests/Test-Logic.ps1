@@ -93,7 +93,7 @@ Assert-Equal $profileB.OutputId 'speakers' 'Profile B uses speakers for general 
 Assert-Equal $profileB.CommunicationsId 'speakers' 'Profile B uses speakers for communications'
 Assert-Equal $profileB.OutputName 'Altavoces' 'Profile B retains the localized device name'
 
-# Legacy v2 display labels are not schema keys and must not force a migration.
+# Legacy configuration display labels are not schema keys and must not force a migration.
 $roundtrip.CommunicationsB = [pscustomobject]@{ Mode = 'Keep'; Id = ''; Name = 'Sin cambios' }
 Assert-Configuration $roundtrip
 $count++

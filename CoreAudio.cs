@@ -171,7 +171,7 @@ namespace AudioSwitcher
             finally { Release(device); Release(enumerator); }
         }
 
-        // Backward-compatible entry point for v1 callers.
+        // Backward-compatible entry point for earlier local scripts.
         public static void SetPlaybackDefaults(string id, bool includeCommunications)
         {
             SetPlaybackProfile(id, includeCommunications ? id : null);

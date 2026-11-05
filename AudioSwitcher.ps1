@@ -258,8 +258,12 @@ function Test-OwnedAudioShortcut {
     $arguments = [string]$Shortcut.Arguments
 
     if ($Shortcut.TargetPath -eq $powershell) {
-        return ($arguments.IndexOf('"' + $oldScript + '"', [StringComparison]::OrdinalIgnoreCase) -ge 0 -or
-            $arguments.IndexOf('"' + $newScript + '"', [StringComparison]::OrdinalIgnoreCase) -ge 0)
+        # Recognize a direct -File invocation, never a path mentioned by another command.
+        $invocation = [regex]::Match($arguments,
+            '(?i)^\s*(?:(?:-(?:NoLogo|NoProfile|NonInteractive|STA|MTA)|-(?:ExecutionPolicy|WindowStyle)\s+[a-z0-9]+)\s+)*-File\s+"([^"]+)"(?:\s|$)')
+
+        return ($invocation.Success -and
+            ($invocation.Groups[1].Value -eq $oldScript -or $invocation.Groups[1].Value -eq $newScript))
     }
 
     return $false
@@ -349,7 +353,7 @@ try {
         throw 'Use only one of Configure, Build or List.'
     }
 
-    # Same mutex name as v1; ignore overlapping invocations, no background observer.
+    # Keep the mutex shared with earlier local builds; ignore overlapping invocations, no background observer.
     $mutex = [System.Threading.Mutex]::new($false, 'Local\AlternarAudio_OneShot_20261031')
 
     try { $mutexTaken = $mutex.WaitOne(0) }

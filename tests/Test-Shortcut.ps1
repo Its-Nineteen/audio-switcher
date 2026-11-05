@@ -130,7 +130,7 @@ try {
     Remove-Item -LiteralPath $linkPath
     [void](New-AudioShortcut -Executable $executable)
     $info = Read-TestShortcut $linkPath
-    Assert-Equal $info.TargetPath $executable 'Migrate the known v2 shortcut target'
+    Assert-Equal $info.TargetPath $executable 'Migrate the known legacy shortcut target'
     Assert-Equal $info.IconLocation ($executable + ',0') 'Replace the legacy system icon with the embedded icon'
     Assert-Equal (Test-Path -LiteralPath $legacyPath) $false 'Remove the owned legacy shortcut only after migration'
 
@@ -149,6 +149,38 @@ try {
     Remove-Item -LiteralPath $linkPath
     $powershell = Join-Path $env:SystemRoot 'System32\WindowsPowerShell\v1.0\powershell.exe'
     $legacyScript = Join-Path $temporary 'AlternarAudio.ps1'
+    $unrelatedScript = Join-Path $temporary 'Unrelated.ps1'
+    $foreignArguments = @(
+        ('-NoProfile -File "' + $unrelatedScript + '" -Input "' + $legacyScript + '"'),
+        ('-NoProfile -Command Write-Output ''-File "' + $legacyScript + '"''')
+    )
+
+    foreach ($arguments in $foreignArguments) {
+        New-TestShortcut -Path $linkPath -Target $powershell -Arguments $arguments
+        $foreignHash = (Get-FileHash -LiteralPath $linkPath -Algorithm SHA256).Hash
+        $rejected = $false
+
+        try { [void](New-AudioShortcut -Executable $executable) }
+        catch { $rejected = $true }
+
+        Assert-Equal $rejected $true 'A path mentioned by another command does not establish shortcut ownership'
+        Assert-Equal (Get-FileHash -LiteralPath $linkPath -Algorithm SHA256).Hash $foreignHash 'Preserve an unrelated PowerShell shortcut with the English name'
+        Remove-Item -LiteralPath $linkPath
+        New-TestShortcut -Path $legacyPath -Target $powershell -Arguments $arguments
+        $foreignHash = (Get-FileHash -LiteralPath $legacyPath -Algorithm SHA256).Hash
+        [void](New-AudioShortcut -Executable $executable)
+        Assert-Equal (Get-FileHash -LiteralPath $legacyPath -Algorithm SHA256).Hash $foreignHash 'Preserve an unrelated PowerShell shortcut with the legacy name'
+        Assert-Equal (Read-TestShortcut $linkPath).TargetPath $executable 'Create the new shortcut without migrating an unrelated PowerShell command'
+        Remove-Item -LiteralPath $linkPath
+    }
+
+    $known = [pscustomobject]@{
+        TargetPath = $powershell
+        Arguments = '-NoLogo -NoProfile -NonInteractive -STA -ExecutionPolicy Bypass -WindowStyle Hidden -File "' + $legacyScript + '" -Silencioso'
+    }
+    Assert-Equal (Test-OwnedAudioShortcut $known $executable) $true 'Recognize the legacy script after supported PowerShell flags'
+    $known.Arguments = '-MTA -File "' + (Join-Path $temporary 'AudioSwitcher.ps1') + '" -Quiet'
+    Assert-Equal (Test-OwnedAudioShortcut $known $executable) $true 'Recognize the current script with an apartment-mode flag'
     New-TestShortcut -Path $legacyPath -Target $powershell -Icon $oldDefaultIcon -Arguments ('-NoProfile -File "' + $legacyScript + '" -Silencioso')
     [void](New-AudioShortcut -Executable $executable)
     $info = Read-TestShortcut $linkPath

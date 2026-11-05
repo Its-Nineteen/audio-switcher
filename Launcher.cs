@@ -11,9 +11,7 @@ using System.Windows.Forms;
 
 [assembly: AssemblyTitle("Audio Switcher")]
 [assembly: AssemblyProduct("Audio Switcher")]
-[assembly: AssemblyDescription("Manual audio output switcher without a console window")]
-[assembly: AssemblyVersion("2.0.0.0")]
-[assembly: AssemblyFileVersion("2.0.0.0")]
+[assembly: AssemblyDescription("Switch between Windows playback and communications profiles")]
 
 namespace AudioSwitcherLauncher
 {
